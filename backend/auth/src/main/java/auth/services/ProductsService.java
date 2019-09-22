@@ -1,37 +1,37 @@
 package auth.services;
 
 import auth.entities.Product;
-import auth.repositories.ProductRepository;
+import auth.repositories.ProductsRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductService {
+public class ProductsService {
 
-    private ProductRepository<Product, Long> productRepository;
+    private ProductsRepository<Product, Long> productsRepository;
 
-    public ProductService (ProductRepository<Product, Long> productRepository) {
+    public ProductsService(ProductsRepository<Product, Long> productsRepository) {
         super();
-        this.productRepository = productRepository;
+        this.productsRepository = productsRepository;
     }
 
     public Product postProduct (Product product) {
-        return productRepository.save(product);
+        return productsRepository.save(product);
     }
 
     public Optional<Product> getProduct (long id) {
-        return productRepository.findById(id);
+        return productsRepository.findById(id);
     }
 
     public List<Product> getProducts () {
-        return productRepository.findAll();
+        return productsRepository.findAll();
     }
 
     public Optional<Product> deleteProduct (long id) {
         Optional<Product> product = getProduct(id);
-        productRepository.deleteById(id);
+        productsRepository.deleteById(id);
         return product;
     }
 

@@ -1,7 +1,7 @@
 package auth.controllers;
 
 import auth.entities.Product;
-import auth.services.ProductService;
+import auth.services.ProductsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,22 +10,22 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-public class ProductController {
+public class ProductsController {
 
-    private ProductService productService;
+    private ProductsService productsService;
 
-    public ProductController (ProductService productService) {
-        this.productService = productService;
+    public ProductsController(ProductsService productsService) {
+        this.productsService = productsService;
     }
 
     @PostMapping("/products")
     public ResponseEntity<Product> postProduct(@RequestBody Product product) {
-        return new ResponseEntity<>(productService.postProduct(product), HttpStatus.CREATED);
+        return new ResponseEntity<>(productsService.postProduct(product), HttpStatus.CREATED);
     }
 
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProduct (@PathVariable long id) {
-        Optional<Product> product = productService.getProduct(id);
+        Optional<Product> product = productsService.getProduct(id);
         if (product.isPresent())
             return new ResponseEntity<>(product.get(), HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -33,12 +33,12 @@ public class ProductController {
 
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getProducts () {
-        return new ResponseEntity<>(productService.getProducts(), HttpStatus.OK);
+        return new ResponseEntity<>(productsService.getProducts(), HttpStatus.OK);
     }
 
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable long id) {
-        Optional<Product> product = productService.deleteProduct(id);
+        Optional<Product> product = productsService.deleteProduct(id);
         if (product.isPresent())
             return new ResponseEntity<>(product.get(), HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
