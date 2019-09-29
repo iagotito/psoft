@@ -5,6 +5,7 @@ import lab2.repositorys.UsersRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsersService {
@@ -23,4 +24,17 @@ public class UsersService {
     public List<User> getUsers() {
         return usersRepository.findAll();
     }
+
+    public Optional<User> getUser (String email) {
+        return usersRepository.findById(email);
+    }
+
+    public Optional<User> deleteUser (String email) {
+        Optional<User> optUser = usersRepository.findById(email);
+        if (optUser.isPresent())
+            usersRepository.deleteById(email);
+        return optUser;
+    }
+
+
 }

@@ -55,6 +55,18 @@ public class Subject implements Comparable<Subject> {
         this.likes = likes;
     }
 
+    public Subject (String name) {
+        super();
+        this.name = name;
+        this.grade = 0;
+        this.comments = "";
+        this.likes = 0;
+    }
+
+    public Subject () {
+        super();
+    }
+
     @Override
     public int compareTo(Subject subject) {
         if (this.getGrade() > subject.getGrade())

@@ -1,0 +1,59 @@
+package lab2.controllers;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import lab2.entities.User;
+import lab2.services.UsersService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.ServletException;
+import java.util.Date;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/auth")
+public class LoginController {
+
+    private final String TOKEN_KEY = "login do batman";
+
+    private UsersService usersService;
+
+    public LoginController(UsersService usersService) {
+        super();
+        this.usersService = usersService;
+    }
+
+    @PostMapping("/login")
+    public LoginResponse authenticate(@RequestBody User user) throws ServletException {
+
+        // Retrieve the user
+        Optional<User> authUser = usersService.getUser(user.getEmail());
+        // verifications
+        if (authUser.isEmpty())
+            throw new ServletException("User not found!");
+        if (!authUser.get().getPassword().equals(user.getPassword()))
+            throw new ServletException("Wrong password!");
+
+        String token = generateToken(authUser.get().getEmail());
+
+        return new LoginResponse(token);
+
+    }
+
+    private String generateToken (String id) {
+        return Jwts.builder().setSubject(id).signWith(SignatureAlgorithm.HS512, TOKEN_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + 1 * 60 * 1000)).compact();
+    }
+
+    private class LoginResponse {
+        public String token;
+
+        public LoginResponse(String token) {
+            this.token = token;
+        }
+    }
+
+}
